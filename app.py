@@ -11,7 +11,7 @@ from plotly.subplots import make_subplots
 from bs4 import BeautifulSoup
 
 # =========================================================
-# 1. 페이지 기본 설정 & CSS 커스텀 테마 (InvestingPro Dark Style)
+# 1. 페이지 기본 설정 & CSS 커스텀 테마 (Community Cloud & GitHub 요소 완벽 차단)
 # =========================================================
 CURRENT_YEAR = datetime.datetime.now().year
 DART_API_KEY = "cf10baaa75c3fcd7681b28c3cdd20f11959d6b25"
@@ -20,10 +20,36 @@ st.set_page_config(page_title="LJW Stock Catch Master Terminal", page_icon="💎
 
 st.markdown("""
 <style>
+    /* -------------------------------------------------- */
+    /* 1. 상단 깃허브 아이콘, 햄버거 메뉴, 헤더 완벽 제거 */
+    /* -------------------------------------------------- */
+    #MainMenu {visibility: hidden !important;}
+    header {visibility: hidden !important;}
+    [data-testid="stHeader"] {display: none !important;}
+    [data-testid="stHeaderActionElements"] {display: none !important;}
+    
+    /* -------------------------------------------------- */
+    /* 2. 하단 Community Cloud / Made with Streamlit 워터마크 제거 */
+    /* -------------------------------------------------- */
+    footer {visibility: hidden !important;}
+    [data-testid="stDecoration"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
+    .viewerBadge_container__1S-td {display: none !important;}
+    .viewerBadge_link__1S-td {display: none !important;}
+    #stDecoration {display: none !important;}
+    [data-testid="stAppViewBlockContainer"] > iframe {margin-top: -40px;}
+    
+    /* -------------------------------------------------- */
+    /* 3. 앱 기본 다크 테마 & UI 모바일 밀착 커스텀 */
+    /* -------------------------------------------------- */
     .stApp {
         background-color: #0d1117;
         color: #e6edf3;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 1.5rem !important;
     }
     [data-testid="stSidebar"] {
         background-color: #161b22 !important;
@@ -157,7 +183,7 @@ POPULAR_STOCKS = {
     "삼성물산": {"symbol": "028260", "code": "00126432", "shares": 180000000, "market": "KOSPI", "sector": "지주/건설", "beta": 0.65, "div": 3.8},
     "메리츠금융지주": {"symbol": "138040", "code": "00889245", "shares": 195000000, "market": "KOSPI", "sector": "금융", "beta": 0.58, "div": 4.8},
     "S-Oil": {"symbol": "010950", "code": "00126317", "shares": 112000000, "market": "KOSPI", "sector": "정유/화학", "beta": 0.62, "div": 5.5},
-    "LG화학": {"symbol": "051910", "code": "00252834", "shares": 70500000, "market": "KOSPI", "sector": "정유/화학", "beta": 1.12, "div": 2.2},
+    "LG화학": {"symbol": "051910", "code": "00252834", "shares": 7050000, "market": "KOSPI", "sector": "정유/화학", "beta": 1.12, "div": 2.2},
     "KT&G": {"symbol": "033780", "code": "00139889", "shares": 120000000, "market": "KOSPI", "sector": "필수소비재", "beta": 0.35, "div": 5.2},
     "KT": {"symbol": "030200", "code": "00134440", "shares": 250000000, "market": "KOSPI", "sector": "통신", "beta": 0.42, "div": 5.8},
     "한국전력": {"symbol": "015760", "code": "00159209", "shares": 641000000, "market": "KOSPI", "sector": "유틸리티", "beta": 0.45, "div": 3.2},
@@ -492,7 +518,6 @@ def screen_realtime_defense_stocks(max_beta=0.75, min_div=2.0):
             curr_p, rate, vol = get_naver_realtime_stock(info["symbol"])
             
             # 실시간 방어 스코어 계산 (100점 만점)
-            # 베타가 낮을수록(+35점), 배당률이 높을수록(+35점), 오늘 등락률 하방방어(+30점)
             beta_score = max(0, (1.0 - beta) * 50)
             div_score = min(35, div * 5)
             defense_stability = 30 if rate >= -1.0 else max(0, 30 + rate * 3)
@@ -753,13 +778,12 @@ if current_tab == "📊 AI 가치분석 & 차트":
         st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 2] 🛡️ 한국 시장 이기기 (100% 실시간 퀀트 스크리닝 연동)
+# [탭 2] 🛡️ 한국 시장 이기기
 # ---------------------------------------------------------
 elif current_tab == "🛡️ 한국 시장 이기기":
     st.markdown("## 🛡️ 한국 시장 이기기 (Market Defender - 100% Live Engine)")
     st.caption("인베스팅닷컴 'Beat the Market'급 실시간 퀀트 스크리닝: 전체 상장 종목 중 low-Beta + 고배당 + 실시간 하방방어 우수 종목 자동 추출")
 
-    # 필터링 조건 설정 인터페이스
     with st.expander("⚡ 실시간 방어주 필터링 스크리닝 기준 조절", expanded=True):
         fc1, fc2 = st.columns(2)
         with fc1:
@@ -767,7 +791,6 @@ elif current_tab == "🛡️ 한국 시장 이기기":
         with fc2:
             input_min_div = st.slider("💰 최소 예상 배당수익률 (%)", 1.0, 8.0, 2.5, step=0.5, help="높을수록 하락장에서 강력한 주가 하방 지지선 역할을 합니다.")
 
-    # 실시간 스크리닝 실행
     df_def_live = screen_realtime_defense_stocks(max_beta=input_max_beta, min_div=input_min_div)
 
     def_col1, def_col2, def_col3 = st.columns(3)
