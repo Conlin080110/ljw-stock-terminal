@@ -87,27 +87,6 @@ st.markdown("""
         font-size: 0.8rem;
         font-weight: 600;
     }
-    .dip-card-fire {
-        background: linear-gradient(135deg, rgba(248, 81, 73, 0.2) 0%, rgba(210, 153, 34, 0.1) 100%);
-        border: 1px solid #f85149;
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin-bottom: 12px;
-    }
-    .dip-card-warning {
-        background: linear-gradient(135deg, rgba(210, 153, 34, 0.2) 0%, rgba(56, 139, 253, 0.1) 100%);
-        border: 1px solid #d29922;
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin-bottom: 12px;
-    }
-    .dip-card-safe {
-        background: linear-gradient(135deg, rgba(46, 160, 67, 0.15) 0%, rgba(22, 27, 34, 0.8) 100%);
-        border: 1px solid #3fb950;
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin-bottom: 12px;
-    }
     div[role="radiogroup"] {
         gap: 6px;
     }
@@ -201,28 +180,28 @@ POPULAR_STOCKS = {
 
 UNJUSTIFIED_DIP_STOCKS_DB = {
     "KOSPI": [
-        {"name": "삼성전자", "symbol": "005930", "code": "00126380", "shares": 5969782550, "rise_reason": "순현금 100조원+ / HBM3E 공급 확대 확정 및 메모리 초호황", "drop_reason": "글로벌 매크로 지수 급락에 따른 외국인 ETF 기계적 패닉셀", "fair_upside": "+38.5%"},
-        {"name": "SK하이닉스", "symbol": "000660", "code": "00164779", "shares": 728002365, "rise_reason": "HBM3E 시장 독점 / 영업이익률 38%대 역대 최대 마진", "drop_reason": "미국 테크주 차익실현에 연동된 국내 선물 옵션 동기화 투매", "fair_upside": "+42.0%"},
-        {"name": "현대차", "symbol": "005380", "code": "00126362", "shares": 211531000, "rise_reason": "ROE 13.5% / 인도 법인 대형 상장 모멘텀 및 북미 하이브리드 독주", "drop_reason": "단기 자동차 피크아웃 미신 및 지수 하락 피할 길 없는 동반 과매도", "fair_upside": "+31.2%"},
-        {"name": "기아", "symbol": "000270", "code": "00106641", "shares": 398800000, "rise_reason": "OPM 12.3% 글로벌 완성차 최상위 / 자사주 소각 및 배당수익률 6%", "drop_reason": "수급 공백기에 발생한 기관 프로그램 알고리즘 기계적 이탈", "fair_upside": "+35.8%"},
-        {"name": "삼양식품", "symbol": "003230", "code": "00128704", "shares": 7530000, "rise_reason": "해외 불닭볶음면 직수출 수직 상승 / OPM 22% 초고마진", "drop_reason": "단기 수급 불균형 및 소액주주 단기 차익실현 물량 과다 출회", "fair_upside": "+48.0%"},
-        {"name": "HD현대일렉트릭", "symbol": "267260", "code": "01202574", "shares": 36000000, "rise_reason": "북미 전력망 교체 및 AI 데이터센터 변압기 숏티지 수주 폭주", "drop_reason": "단기 주가 고점 오해로 인한 개미 투매 및 기관 매도", "fair_upside": "+41.5%"},
-        {"name": "NAVER", "symbol": "035420", "code": "00266961", "shares": 162400000, "rise_reason": "광고 및 서치AI 매출 턴어라운드 / 치지직 플랫폼 수익화 가속", "drop_reason": "국내 플랫폼 규제 우려 노이즈로 인한 비이성적 연속 하락", "fair_upside": "+29.4%"},
-        {"name": "크래프톤", "symbol": "259960", "code": "01229340", "shares": 48000000, "rise_reason": "배틀그라운드 IP 글로벌 매출 역대 신기록 / OPM 48% 초고마진", "drop_reason": "게임 업황 전체 침체 우려에 휩쓸려 일시적 동반 저평가 진입", "fair_upside": "+34.0%"},
-        {"name": "KB금융", "symbol": "105560", "code": "00208226", "shares": 390000000, "rise_reason": "정부 밸류업 최대 수혜 / CET1 비율 최상위 및 고배당 지속", "drop_reason": "금리 인하 기조에 따른 순이자마진(NIM) 단기 오해 투매", "fair_upside": "+26.5%"},
-        {"name": "S-Oil", "symbol": "010950", "code": "00126317", "shares": 112000000, "rise_reason": "유동비율 145% 자산건전성 우수 / 복합 정제마진 저점 통과 반등", "drop_reason": "유가 단기 변동성에 빠진 유통 물량의 억울한 일시적 폭락", "fair_upside": "+33.1%"}
+        {"name": "삼성전자", "symbol": "005930", "code": "00126380", "shares": 5969782550, "rise_reason": "순현금 100조원+ / HBM3E 공급 확대 확정 및 메모리 초호황", "drop_reason": "글로벌 매크로 지수 급락에 따른 외국인 ETF 기계적 패닉셀"},
+        {"name": "SK하이닉스", "symbol": "000660", "code": "00164779", "shares": 728002365, "rise_reason": "HBM3E 시장 독점 / 영업이익률 38%대 역대 최대 마진", "drop_reason": "미국 테크주 차익실현에 연동된 국내 선물 옵션 동기화 투매"},
+        {"name": "현대차", "symbol": "005380", "code": "00126362", "shares": 211531000, "rise_reason": "ROE 13.5% / 인도 법인 대형 상장 모멘텀 및 북미 하이브리드 독주", "drop_reason": "단기 자동차 피크아웃 미신 및 지수 하락 피할 길 없는 동반 과매도"},
+        {"name": "기아", "symbol": "000270", "code": "00106641", "shares": 398800000, "rise_reason": "OPM 12.3% 글로벌 완성차 최상위 / 자사주 소각 및 배당수익률 6%", "drop_reason": "수급 공백기에 발생한 기관 프로그램 알고리즘 기계적 이탈"},
+        {"name": "삼양식품", "symbol": "003230", "code": "00128704", "shares": 7530000, "rise_reason": "해외 불닭볶음면 직수출 수직 상승 / OPM 22% 초고마진", "drop_reason": "단기 수급 불균형 및 소액주주 단기 차익실현 물량 과다 출회"},
+        {"name": "HD현대일렉트릭", "symbol": "267260", "code": "01202574", "shares": 36000000, "rise_reason": "북미 전력망 교체 및 AI 데이터센터 변압기 숏티지 수주 폭주", "drop_reason": "단기 주가 고점 오해로 인한 개미 투매 및 기관 매도"},
+        {"name": "NAVER", "symbol": "035420", "code": "00266961", "shares": 162400000, "rise_reason": "광고 및 서치AI 매출 턴어라운드 / 치지직 플랫폼 수익화 가속", "drop_reason": "국내 플랫폼 규제 우려 노이즈로 인한 비이성적 연속 하락"},
+        {"name": "크래프톤", "symbol": "259960", "code": "01229340", "shares": 48000000, "rise_reason": "배틀그라운드 IP 글로벌 매출 역대 신기록 / OPM 48% 초고마진", "drop_reason": "게임 업황 전체 침체 우려에 휩쓸려 일시적 동반 저평가 진입"},
+        {"name": "KB금융", "symbol": "105560", "code": "00208226", "shares": 390000000, "rise_reason": "정부 밸류업 최대 수혜 / CET1 비율 최상위 및 고배당 지속", "drop_reason": "금리 인하 기조에 따른 순이자마진(NIM) 단기 오해 투매"},
+        {"name": "S-Oil", "symbol": "010950", "code": "00126317", "shares": 112000000, "rise_reason": "유동비율 145% 자산건전성 우수 / 복합 정제마진 저점 통과 반등", "drop_reason": "유가 단기 변동성에 빠진 유통 물량의 억울한 일시적 폭락"}
     ],
     "KOSDAQ": [
-        {"name": "알테오젠", "symbol": "196170", "code": "00962380", "shares": 53200000, "rise_reason": "머크 키트루다 SC 독점 로열티 유입 가속 / OPM 68% 독점", "drop_reason": "코스닥 제약/바이오 섹터 수급 이탈 및 공매도 노이즈 투매", "fair_upside": "+55.0%"},
-        {"name": "리노공업", "symbol": "058470", "code": "00366887", "shares": 15200000, "rise_reason": "부채비율 8% 무차입 경영 / 온디바이스 AI 칩 소켓 독점 공급", "drop_reason": "코스닥 반도체 소부장 전반의 차익실현 세력 기계적 매도", "fair_upside": "+39.2%"},
-        {"name": "클래시스", "symbol": "214150", "code": "01103688", "shares": 65000000, "rise_reason": "ROE 34% / 해외 슈링크 유니버스 소모품 고마진 자동 매출 증가", "drop_reason": "외국인 투자자 단기 포트폴리오 리밸런싱에 따른 일시 매도", "fair_upside": "+43.6%"},
-        {"name": "HPSP", "symbol": "403870", "code": "01594954", "shares": 81000000, "rise_reason": "세계 유일 고압 수소 어닐링 장비 독점 / 영업이익률 52%", "drop_reason": "파운드리 공정 지연 악성 루머로 인한 개인 투자자 공포 매도", "fair_upside": "+46.0%"},
-        {"name": "실리콘투", "symbol": "257720", "code": "01185585", "shares": 60000000, "rise_reason": "미국/유럽 K-뷰티 역직구 물류 플랫폼 수직 성장 독점", "drop_reason": "단기 급등에 따른 단순 착시 오해 및 단기 스캘퍼 물량 폭증", "fair_upside": "+52.1%"},
-        {"name": "휴젤", "symbol": "145020", "code": "00908865", "shares": 12300000, "rise_reason": "미국 FDA 보톡스 승인 완료 및 직판 전환으로 마진율 44%", "drop_reason": "의료기기 소송 노이즈 과장 보도로 인한 억울한 하락", "fair_upside": "+37.4%"},
-        {"name": "삼천당제약", "symbol": "000250", "code": "00106395", "shares": 23200000, "rise_reason": "아일리아 바이오시밀러 유럽 본계약 체결 완료 및 마일스톤 유입", "drop_reason": "바이오 섹터 단기 수급 이탈과 함께 휩쓸린 비이성적 급락", "fair_upside": "+49.8%"},
-        {"name": "솔브레인", "symbol": "357780", "code": "01458899", "shares": 7800000, "rise_reason": "유동비율 260% 우수 / 반도체 케미컬 가동률 회복 턴어라운드", "drop_reason": "메모리 업황 숨고르기에 유탄 맞은 단기 투매", "fair_upside": "+32.5%"},
-        {"name": "주성엔지니어링", "symbol": "036930", "code": "00293237", "shares": 48200000, "rise_reason": "ALD 증착장비 해외 고객사 다변화 가속 / OPM 29%", "drop_reason": "코스닥 지수 하락 시 기계적으로 출하되는 수급 폭락", "fair_upside": "+40.1%"},
-        {"name": "JYP Ent.", "symbol": "035900", "code": "00262105", "shares": 35500000, "rise_reason": "월드투어 및 음원 고마진 매출 회복 / OPM 29% 재상승", "drop_reason": "엔터 업황 피크아웃 착각으로 발생한 억울한 과매도 구간", "fair_upside": "+36.7%"}
+        {"name": "알테오젠", "symbol": "196170", "code": "00962380", "shares": 53200000, "rise_reason": "머크 키트루다 SC 독점 로열티 유입 가속 / OPM 68% 독점", "drop_reason": "코스닥 제약/바이오 섹터 수급 이탈 및 공매도 노이즈 투매"},
+        {"name": "리노공업", "symbol": "058470", "code": "00366887", "shares": 15200000, "rise_reason": "부채비율 8% 무차입 경영 / 온디바이스 AI 칩 소켓 독점 공급", "drop_reason": "코스닥 반도체 소부장 전반의 차익실현 세력 기계적 매도"},
+        {"name": "클래시스", "symbol": "214150", "code": "01103688", "shares": 65000000, "rise_reason": "ROE 34% / 해외 슈링크 유니버스 소모품 고마진 자동 매출 증가", "drop_reason": "외국인 투자자 단기 포트폴리오 리밸런싱에 따른 일시 매도"},
+        {"name": "HPSP", "symbol": "403870", "code": "01594954", "shares": 81000000, "rise_reason": "세계 유일 고압 수소 어닐링 장비 독점 / 영업이익률 52%", "drop_reason": "파운드리 공정 지연 악성 루머로 인한 개인 투자자 공포 매도"},
+        {"name": "실리콘투", "symbol": "257720", "code": "01185585", "shares": 60000000, "rise_reason": "미국/유럽 K-뷰티 역직구 물류 플랫폼 수직 성장 독점", "drop_reason": "단기 급등에 따른 단순 착시 오해 및 단기 스캘퍼 물량 폭증"},
+        {"name": "휴젤", "symbol": "145020", "code": "00908865", "shares": 12300000, "rise_reason": "미국 FDA 보톡스 승인 완료 및 직판 전환으로 마진율 44%", "drop_reason": "의료기기 소송 노이즈 과장 보도로 인한 억울한 하락"},
+        {"name": "삼천당제약", "symbol": "000250", "code": "00106395", "shares": 23200000, "rise_reason": "아일리아 바이오시밀러 유럽 본계약 체결 완료 및 마일스톤 유입", "drop_reason": "바이오 섹터 단기 수급 이탈과 함께 휩쓸린 비이성적 급락"},
+        {"name": "솔브레인", "symbol": "357780", "code": "01458899", "shares": 7800000, "rise_reason": "유동비율 260% 우수 / 반도체 케미컬 가동률 회복 턴어라운드", "drop_reason": "메모리 업황 숨고르기에 유탄 맞은 단기 투매"},
+        {"name": "주성엔지니어링", "symbol": "036930", "code": "00293237", "shares": 48200000, "rise_reason": "ALD 증착장비 해외 고객사 다변화 가속 / OPM 29%", "drop_reason": "코스닥 지수 하락 시 기계적으로 출하되는 수급 폭락"},
+        {"name": "JYP Ent.", "symbol": "035900", "code": "00262105", "shares": 35500000, "rise_reason": "월드투어 및 음원 고마진 매출 회복 / OPM 29% 재상승", "drop_reason": "엔터 업황 피크아웃 착각으로 발생한 억울한 과매도 구간"}
     ]
 }
 
@@ -306,7 +285,7 @@ QUANT_SCANNER_DB = {
 }
 
 # =========================================================
-# 3. 백엔드 실시간 연동 및 크롤링/스크래핑 함수
+# 3. 백엔드 실시간 연동 및 차트/수급 스크래핑 함수
 # =========================================================
 
 # [실시간 동적 크롤러] 네이버 증권 실시간 증시 하락률 상위 종목 크롤러
@@ -615,31 +594,68 @@ def screen_realtime_defense_stocks(max_beta=0.75, min_div=2.0):
         df_def = df_def.sort_values(by="score", ascending=False).reset_index(drop=True)
     return df_def
 
-# [실시간 7] AI 3단계 분할 매수 타이밍 산출 알고리즘
-def calculate_dip_buy_timing(curr_price, srim_price, roe, health_score, rsi):
-    discount = round(((srim_price - curr_price) / srim_price) * 100, 1) if srim_price > 0 else 0.0
-    target_1 = round(srim_price * 0.82)  # 1차 매수 (-18% 할인)
-    target_2 = round(srim_price * 0.68)  # 2차 매수 (-32% 과매도)
-    target_3 = round(srim_price * 0.55)  # 3차 매수 (바닥 확인)
+# =========================================================
+# [핵심 개수 수정] 종목별 차트/지표/베타 기반 동적 매수 타점 연산
+# =========================================================
+def calculate_dynamic_stock_buy_targets(symbol, curr_price, beta=1.0, srim_price=0):
+    df_chart = fetch_stock_history_df(symbol, timeframe_code="day", count=90)
     
-    if rsi <= 35 and discount >= 20.0:
+    if not df_chart.empty and len(df_chart) >= 20:
+        ma20 = df_chart['MA20'].iloc[-1] if 'MA20' in df_chart.columns and not pd.isna(df_chart['MA20'].iloc[-1]) else curr_price * 0.96
+        ma60 = df_chart['Close'].rolling(window=60).mean().iloc[-1] if len(df_chart) >= 60 else curr_price * 0.88
+        if pd.isna(ma60): ma60 = curr_price * 0.88
+        
+        std20 = df_chart['Close'].rolling(window=20).std().iloc[-1] if len(df_chart) >= 20 else curr_price * 0.03
+        if pd.isna(std20): std20 = curr_price * 0.03
+        boll_lower = ma20 - (2 * std20)
+        recent_low = df_chart['Low'].min()
+        
+        # 1차 매수 타점 (단기 눌림 / 20일 이평선 지지)
+        vol_factor_1 = max(0.035, 0.045 * beta)
+        target_1 = min(round(curr_price * (1 - vol_factor_1)), max(round(ma20), round(boll_lower)))
+        if target_1 >= curr_price:
+            target_1 = round(curr_price * (1 - vol_factor_1))
+            
+        # 2차 매수 타점 (주요 지지선 / 60일 이평선 or 볼린저 하단)
+        vol_factor_2 = max(0.08, 0.10 * beta)
+        target_2 = min(round(curr_price * (1 - vol_factor_2)), min(round(ma60), round(boll_lower)))
+        if target_2 >= target_1:
+            target_2 = round(target_1 * 0.93)
+            
+        # 3차 매수 타점 (최저가 바닥 / S-RIM 가치 한계선)
+        vol_factor_3 = max(0.15, 0.18 * beta)
+        target_3 = min(round(curr_price * (1 - vol_factor_3)), round(recent_low))
+        if srim_price > 0 and srim_price * 0.75 < target_3:
+            target_3 = round(srim_price * 0.75)
+        if target_3 >= target_2:
+            target_3 = round(target_2 * 0.92)
+    else:
+        # 기본 변동성(Beta) 반영 타점
+        vol_factor_1 = max(0.035, 0.045 * beta)
+        vol_factor_2 = max(0.08, 0.10 * beta)
+        vol_factor_3 = max(0.15, 0.18 * beta)
+        target_1 = round(curr_price * (1 - vol_factor_1))
+        target_2 = round(curr_price * (1 - vol_factor_2))
+        target_3 = round(curr_price * (1 - vol_factor_3))
+
+    pct_1 = round(((target_1 - curr_price) / curr_price) * 100, 1)
+    pct_2 = round(((target_2 - curr_price) / curr_price) * 100, 1)
+    pct_3 = round(((target_3 - curr_price) / curr_price) * 100, 1)
+    
+    rsi_val = round(df_chart['RSI'].iloc[-1], 1) if not df_chart.empty and 'RSI' in df_chart.columns else 45.0
+    
+    if rsi_val <= 35 or pct_1 <= -8.0:
         signal = "🔥 [2차 매수 - 극단적 과매도]"
-        card_style = "dip-card-fire"
-    elif rsi <= 42 or discount >= 10.0:
+    elif rsi_val <= 45 or pct_1 <= -4.0:
         signal = "🚨 [1차 매수 - 분할 진입]"
-        card_style = "dip-card-warning"
     else:
         signal = "⚡ [관망 - 타점 대기]"
-        card_style = "dip-card-safe"
-        
+
     return {
-        "srim_price": srim_price,
-        "discount": discount,
-        "target_1": target_1,
-        "target_2": target_2,
-        "target_3": target_3,
-        "signal": signal,
-        "card_style": card_style
+        "target_1": target_1, "pct_1": pct_1,
+        "target_2": target_2, "pct_2": pct_2,
+        "target_3": target_3, "pct_3": pct_3,
+        "signal": signal, "rsi": rsi_val
     }
 
 # =========================================================
@@ -740,11 +756,13 @@ if selected_stock_name in POPULAR_STOCKS:
     shares = POPULAR_STOCKS[selected_stock_name]["shares"]
     stock_market = POPULAR_STOCKS[selected_stock_name]["market"]
     stock_sector = POPULAR_STOCKS[selected_stock_name]["sector"]
+    stock_beta = POPULAR_STOCKS[selected_stock_name]["beta"]
 else:
     corp_code = ""
     shares = 100000000
     stock_market = "KOSPI"
     stock_sector = "일반"
+    stock_beta = 1.0
 
 st.session_state.selected_symbol = stock_symbol
 
@@ -880,11 +898,11 @@ if current_tab == "📊 AI 가치분석 & 차트":
         st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 2] 📉 억울한 폭락 알짜주 (실시간 라이브 크롤러 연동)
+# [탭 2] 📉 억울한 폭락 알짜주 (동적 차트/베타 기반 매수 타점 연산)
 # ---------------------------------------------------------
 elif current_tab == "📉 억울한 폭락 알짜주 (코스피 10선 & 코스닥 10선)":
-    st.markdown("## 📉 억울한 폭락 알짜주 감지기 (네이버 증권 100% 라이브 연동)")
-    st.caption("실제 기업 펀더멘털은 우수한데, 당일/최근 시장 지수 급락 및 알고리즘 수급 이탈로 이유 없이 폭락한 종목과 3단계 분할 매수 타점")
+    st.markdown("## 📉 억울한 폭락 알짜주 감지기 (개별 종목 차트/베타 정밀 매수 타점)")
+    st.caption("기업 펀더멘털은 우수한데 지수 급락에 동반 폭락한 종목과, 각 종목의 실제 20일선/60일선/볼린저밴드/베타 지수에 기반한 정밀 분할 매수 타점")
 
     sub_market = st.radio("🏢 시장 선택", ["🏢 KOSPI (코스피)", "🚀 KOSDAQ (코스닥)"], horizontal=True)
     m_code = "KOSPI" if "KOSPI" in sub_market else "KOSDAQ"
@@ -892,7 +910,7 @@ elif current_tab == "📉 억울한 폭락 알짜주 (코스피 10선 & 코스�
     scan_mode = st.radio("📡 탐지 모드 선택", ["📡 네이버 증권 실시간 라이브 하락주 크롤링 (동적 스캔)", "💎 AI 큐레이션 대표 우량주 10선"], horizontal=True)
 
     if "라이브" in scan_mode:
-        with st.spinner(f"📡 네이버 증권 {m_code} 실시간 하락률 상위 종목을 수집 및 AI 펀더멘털 분석 중..."):
+        with st.spinner(f"📡 네이버 증권 {m_code} 실시간 하락률 상위 종목 수집 및 기술적 타점 계산 중..."):
             live_decliners = scrape_realtime_market_decliners(m_code)
             
         dip_records = []
@@ -901,18 +919,16 @@ elif current_tab == "📉 억울한 폭락 알짜주 (코스피 10선 & 코스�
             r = item["rate"]
             sym = item["symbol"]
             
-            # 펀더멘털 및 S-RIM 연산
+            beta_v = POPULAR_STOCKS.get(item["name"], {}).get("beta", 1.1)
             corp_c = POPULAR_STOCKS.get(item["name"], {}).get("code", "")
             shares_cnt = POPULAR_STOCKS.get(item["name"], {}).get("shares", 50000000)
+            
             e, roe_v, op_v = fetch_dart_financials(corp_c)
-            avg_v, min_v, max_v, upside, m_models = calculate_investing_pro_fair_value(e, roe_v, shares_cnt, p, op_v)
-            h_score = calculate_financial_health_score(roe_v, r, sym)
+            avg_v, _, _, _, m_models = calculate_investing_pro_fair_value(e, roe_v, shares_cnt, p, op_v)
+            srim_p = m_models.get("S-RIM 잔여이익", round(p * 1.2))
             
-            df_chart_temp = fetch_stock_history_df(sym, "day", count=30)
-            rsi_val = round(df_chart_temp['RSI'].iloc[-1], 1) if not df_chart_temp.empty and 'RSI' in df_chart_temp.columns else 40.0
-            
-            srim_p = m_models.get("S-RIM 잔여이익", round(p * 1.25))
-            dip_calc = calculate_dip_buy_timing(p, srim_p, roe_v, h_score['total'], rsi_val)
+            # 종목별 개별 차트 및 베타 기반 타점 산출
+            targets = calculate_dynamic_stock_buy_targets(sym, p, beta=beta_v, srim_price=srim_p)
             
             dip_records.append({
                 "순위": idx,
@@ -920,28 +936,30 @@ elif current_tab == "📉 억울한 폭락 알짜주 (코스피 10선 & 코스�
                 "symbol": sym,
                 "현재가": p,
                 "등락률": r,
-                "S-RIM 적정가": dip_calc["srim_price"],
-                "괴리율(할인율)": dip_calc["discount"],
-                "RSI 지표": rsi_val,
-                "원래 올라야 할 이유": f"ROE {roe_v:.1f}% / AI 재무 헬스 스코어 {h_score['total']}점의 우수한 펀더멘털",
-                "아무 이유없이 폭락한 원인": "당일 국장 지수 급락에 따른 알고리즘 수급 기계적 매도 출회",
-                "1차 매수 타점 (-18%)": f"{dip_calc['target_1']:,}원",
-                "2차 매수 타점 (-32%)": f"{dip_calc['target_2']:,}원",
-                "AI 시그널": dip_calc["signal"]
+                "S-RIM 적정가": srim_p,
+                "RSI 지표": targets["rsi"],
+                "원래 올라야 할 이유": f"ROE {roe_v:.1f}% 및 펀더멘털 건전성 보유",
+                "아무 이유없이 폭락한 원인": "당일 시장 지수 급락에 따른 기계적 차익실현 및 수급 이탈",
+                "1차 타점 (20일선)": f"{targets['target_1']:,}원 ({targets['pct_1']:+.1f}%)",
+                "2차 타점 (60일선/볼린저)": f"{targets['target_2']:,}원 ({targets['pct_2']:+.1f}%)",
+                "3차 타점 (바닥선)": f"{targets['target_3']:,}원 ({targets['pct_3']:+.1f}%)",
+                "target_1_val": targets['target_1'], "pct_1_val": targets['pct_1'],
+                "target_2_val": targets['target_2'], "pct_2_val": targets['pct_2'],
+                "target_3_val": targets['target_3'], "pct_3_val": targets['pct_3'],
+                "AI 시그널": targets["signal"]
             })
     else:
         target_stocks = UNJUSTIFIED_DIP_STOCKS_DB[m_code]
         dip_records = []
         for idx, item in enumerate(target_stocks, 1):
             p, r, v = get_naver_realtime_stock(item["symbol"])
+            beta_v = POPULAR_STOCKS.get(item["name"], {}).get("beta", 1.0)
             e, roe_v, op_v = fetch_dart_financials(item["code"])
             avg_v, _, _, _, m_models = calculate_investing_pro_fair_value(e, roe_v, item["shares"], p, op_v)
-            h_score = calculate_financial_health_score(roe_v, r, item["symbol"])
+            srim_p = m_models.get("S-RIM 잔여이익", round(p * 1.25))
             
-            df_chart_temp = fetch_stock_history_df(item["symbol"], "day", count=30)
-            rsi_val = round(df_chart_temp['RSI'].iloc[-1], 1) if not df_chart_temp.empty and 'RSI' in df_chart_temp.columns else 45.0
-            
-            dip_calc = calculate_dip_buy_timing(p, m_models["S-RIM 잔여이익"], roe_v, h_score['total'], rsi_val)
+            # 종목별 개별 차트 및 베타 기반 타점 산출
+            targets = calculate_dynamic_stock_buy_targets(item["symbol"], p, beta=beta_v, srim_price=srim_p)
             
             dip_records.append({
                 "순위": idx,
@@ -949,43 +967,45 @@ elif current_tab == "📉 억울한 폭락 알짜주 (코스피 10선 & 코스�
                 "symbol": item["symbol"],
                 "현재가": p,
                 "등락률": r,
-                "S-RIM 적정가": dip_calc["srim_price"],
-                "괴리율(할인율)": dip_calc["discount"],
-                "RSI 지표": rsi_val,
+                "S-RIM 적정가": srim_p,
+                "RSI 지표": targets["rsi"],
                 "원래 올라야 할 이유": item["rise_reason"],
                 "아무 이유없이 폭락한 원인": item["drop_reason"],
-                "1차 매수 타점 (-18%)": f"{dip_calc['target_1']:,}원",
-                "2차 매수 타점 (-32%)": f"{dip_calc['target_2']:,}원",
-                "AI 시그널": dip_calc["signal"]
+                "1차 타점 (20일선)": f"{targets['target_1']:,}원 ({targets['pct_1']:+.1f}%)",
+                "2차 타점 (60일선/볼린저)": f"{targets['target_2']:,}원 ({targets['pct_2']:+.1f}%)",
+                "3차 타점 (바닥선)": f"{targets['target_3']:,}원 ({targets['pct_3']:+.1f}%)",
+                "target_1_val": targets['target_1'], "pct_1_val": targets['pct_1'],
+                "target_2_val": targets['target_2'], "pct_2_val": targets['pct_2'],
+                "target_3_val": targets['target_3'], "pct_3_val": targets['pct_3'],
+                "AI 시그널": targets["signal"]
             })
 
     df_dip_show = pd.DataFrame(dip_records)
 
-    st.markdown(f"### 📊 [{m_code}] 폭락 알짜주 10선 실시간 종합 리스트 ({scan_mode.split()[0]})")
-    st.dataframe(df_dip_show[["순위", "종목명", "현재가", "등락률", "S-RIM 적정가", "괴리율(할인율)", "RSI 지표", "1차 매수 타점 (-18%)", "2차 매수 타점 (-32%)", "AI 시그널"]], use_container_width=True, hide_index=True)
+    st.markdown(f"### 📊 [{m_code}] 폭락 알짜주 종목별 개별 매수 타점 리스트")
+    st.dataframe(df_dip_show[["순위", "종목명", "현재가", "등락률", "S-RIM 적정가", "RSI 지표", "1차 타점 (20일선)", "2차 타점 (60일선/볼린저)", "3차 타점 (바닥선)", "AI 시그널"]], use_container_width=True, hide_index=True)
 
     st.divider()
-    st.markdown(f"### 🔍 [{m_code}] 10개 종목별 폭락 원인 & AI 분할 매수 타점 상세")
+    st.markdown(f"### 🔍 [{m_code}] 10개 종목별 정밀 차트 매수 타점 분석")
 
     for record in dip_records:
         st.markdown(f"""
         <div class="metric-card" style="border-left: 4px solid #388bfd;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h3 style="margin: 0; color: #ffffff;">{record['순위']}. {record['종목명']} ({record['symbol']})</h3>
-                <span class="badge-blue">실시간 {record['현재가']:,}원 ({record['등락률']:+.2f}%)</span>
+                <span class="badge-blue">현재가 {record['현재가']:,}원 ({record['등락률']:+.2f}%)</span>
             </div>
-            <p style="color: #3fb950; font-weight: 700; margin: 8px 0 2px 0;">📈 원래 올라야 할 이유 (펀더멘털): {record['원래 올라야 할 이유']}</p>
-            <p style="color: #f85149; font-weight: 700; margin: 2px 0 8px 0;">💥 폭락 원인 (수급/공포): {record['아무 이유없이 폭락한 원인']}</p>
+            <p style="color: #3fb950; font-weight: 700; margin: 8px 0 2px 0;">📈 원래 올라야 할 이유: {record['원래 올라야 할 이유']}</p>
+            <p style="color: #f85149; font-weight: 700; margin: 2px 0 8px 0;">💥 아무 이유없이 폭락한 원인: {record['아무 이유없이 폭락한 원인']}</p>
             <div style="display: flex; gap: 15px; font-size: 0.9rem; color: #c9d1d9;">
                 <span>🎯 S-RIM 적정가: <b>{record['S-RIM 적정가']:,}원</b></span>
-                <span>📉 적정가 대비 괴리율: <b>{record['괴리율(할인율)']}% 할인</b></span>
                 <span>📊 RSI 지표: <b>{record['RSI 지표']}</b></span>
             </div>
-            <div style="margin-top: 10px; padding: 10px; background-color: rgba(31, 111, 235, 0.15); border-radius: 8px;">
-                <b>💡 AI 추천 3단계 분할 매수 타점:</b><br>
-                • <b>1차 매수 (30% 비중):</b> {record['1차 매수 타점 (-18%)']} 진입<br>
-                • <b>2차 매수 (40% 비중):</b> {record['2차 매수 타점 (-32%)']} 극단적 공포 구간<br>
-                • <b>3차 매수 (30% 비중):</b> RSI 과매도 탈출 바닥 반등 확인 후 최종 집행
+            <div style="margin-top: 10px; padding: 12px; background-color: rgba(31, 111, 235, 0.15); border-radius: 8px; border: 1px solid rgba(56, 139, 253, 0.3);">
+                <b style="color: #58a6ff;">💡 개별 종목 차트 기반 3단계 분할 매수 타점:</b><br>
+                • <b>1차 매수 (30% 비중):</b> <span style="color: #f1e05a; font-weight: 700;">{record['target_1_val']:,}원 ({record['pct_1_val']:+.1f}%)</span> [20일 이평선 / 단기 눌림 지지선]<br>
+                • <b>2차 매수 (40% 비중):</b> <span style="color: #d2a8ff; font-weight: 700;">{record['target_2_val']:,}원 ({record['pct_2_val']:+.1f}%)</span> [60일 이평선 / 볼린저 밴드 하단 강력 지지]<br>
+                • <b>3차 매수 (30% 비중):</b> <span style="color: #3fb950; font-weight: 700;">{record['target_3_val']:,}원 ({record['pct_3_val']:+.1f}%)</span> [전저점 최저가 바닥 / S-RIM 밸류에이션 한계선]
             </div>
         </div>
         """, unsafe_allow_html=True)
