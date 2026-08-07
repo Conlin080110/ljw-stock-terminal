@@ -87,6 +87,27 @@ st.markdown("""
         font-size: 0.8rem;
         font-weight: 600;
     }
+    .dip-card-fire {
+        background: linear-gradient(135deg, rgba(248, 81, 73, 0.2) 0%, rgba(210, 153, 34, 0.1) 100%);
+        border: 1px solid #f85149;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 12px;
+    }
+    .dip-card-warning {
+        background: linear-gradient(135deg, rgba(210, 153, 34, 0.2) 0%, rgba(56, 139, 253, 0.1) 100%);
+        border: 1px solid #d29922;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 12px;
+    }
+    .dip-card-safe {
+        background: linear-gradient(135deg, rgba(46, 160, 67, 0.15) 0%, rgba(22, 27, 34, 0.8) 100%);
+        border: 1px solid #3fb950;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 12px;
+    }
     div[role="radiogroup"] {
         gap: 6px;
     }
@@ -162,7 +183,7 @@ POPULAR_STOCKS = {
     "KT": {"symbol": "030200", "code": "00134440", "shares": 250000000, "market": "KOSPI", "sector": "통신", "beta": 0.42, "div": 5.8},
     "한국전력": {"symbol": "015760", "code": "00159209", "shares": 641000000, "market": "KOSPI", "sector": "유틸리티", "beta": 0.45, "div": 3.2},
     "기업은행": {"symbol": "024110", "code": "00114093", "shares": 797000000, "market": "KOSPI", "sector": "금융", "beta": 0.51, "div": 7.8},
-    "맥쿼리인프라": {"symbol": "088980", "code": "00587274", "shares": 400000000, "market": "KOSPI", "sector": "인프라펀드", "beta": 0.28, "div": 6.4},
+    "맥quarie인프라": {"symbol": "088980", "code": "00587274", "shares": 400000000, "market": "KOSPI", "sector": "인프라펀드", "beta": 0.28, "div": 6.4},
 
     # KOSDAQ
     "에코프로비엠": {"symbol": "247540", "code": "01183578", "shares": 97800000, "market": "KOSDAQ", "sector": "2차전지", "beta": 1.60, "div": 0.2},
@@ -492,7 +513,6 @@ def screen_realtime_defense_stocks(max_beta=0.75, min_div=2.0):
             curr_p, rate, vol = get_naver_realtime_stock(info["symbol"])
             
             # 실시간 방어 스코어 계산 (100점 만점)
-            # 베타가 낮을수록(+35점), 배당률이 높을수록(+35점), 오늘 등락률 하방방어(+30점)
             beta_score = max(0, (1.0 - beta) * 50)
             div_score = min(35, div * 5)
             defense_stability = 30 if rate >= -1.0 else max(0, 30 + rate * 3)
@@ -515,6 +535,49 @@ def screen_realtime_defense_stocks(max_beta=0.75, min_div=2.0):
     if not df_def.empty:
         df_def = df_def.sort_values(by="score", ascending=False).reset_index(drop=True)
     return df_def
+
+# [실시간 7] 하락장 폭락 우량주 & AI 3단계 분할 매수 타이밍 계산기
+def calculate_dip_buy_timing(curr_price, srim_price, roe, health_score, rsi, price_rate):
+    """
+    하락장에서 재무는 우수하지만 시장 공포로 급락한 알짜 종목과 3단계 분할 매수 타점 계산
+    """
+    discount = round(((srim_price - curr_price) / srim_price) * 100, 1) if srim_price > 0 else 0.0
+    
+    # 매수 타점 1차 (최초 과매도 - 비중 30%)
+    target_1 = round(srim_price * 0.82)
+    # 매수 타점 2차 (공포 투매 - 비중 40%)
+    target_2 = round(srim_price * 0.68)
+    # 매수 타점 3차 (바닥 확인 - 비중 30%)
+    target_3 = round(srim_price * 0.55)
+    
+    # 시그널 판정
+    if health_score < 3.0 or roe < 3.0:
+        signal = "⚠️ [주의 - 재무 점수 미달]"
+        card_style = "dip-card-warning"
+        reason = "재무 건전성이 낮아 펀더멘털 악재에 따른 하락일 가능성이 높음"
+    elif rsi <= 30 and discount >= 20.0:
+        signal = "🔥 [2차 매수 - 극단적 과매도]"
+        card_style = "dip-card-fire"
+        reason = "재무 우수 우량주가 시장 하락 공포로 극단적 저평가 구간 진입 (강력 매수 시그널)"
+    elif rsi <= 38 or discount >= 10.0:
+        signal = "🚨 [1차 매수 - 분할 매수 진입]"
+        card_style = "dip-card-warning"
+        reason = "적정 가치 대비 저평가 괴리율 발생 중 (1차 분할 매수 적합)"
+    else:
+        signal = "⚡ [관망 - 타점 대기]"
+        card_style = "dip-card-safe"
+        reason = "현재 안정적 시세 유지 중 (추가 하락시 1차 매수 타점 도달 대기)"
+        
+    return {
+        "srim_price": srim_price,
+        "discount": discount,
+        "target_1": target_1,
+        "target_2": target_2,
+        "target_3": target_3,
+        "signal": signal,
+        "card_style": card_style,
+        "reason": reason
+    }
 
 # =========================================================
 # 4. 사이드바 UI & 회원 로그인 시스템
@@ -628,7 +691,7 @@ tg_token = st.sidebar.text_input("Telegram Bot Token", value="", type="password"
 tg_chat_id = st.sidebar.text_input("Telegram Chat ID", value="")
 
 # =========================================================
-# 5. 헤더 & 15개 마스터 메뉴
+# 5. 헤더 & 16개 마스터 메뉴
 # =========================================================
 st.markdown(f"""
 <div style="background: linear-gradient(90deg, #1f6feb 0%, #111827 100%); padding: 18px 24px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #388bfd44;">
@@ -642,6 +705,7 @@ st.markdown(f"""
 
 tab_options = [
     "📊 AI 가치분석 & 차트", 
+    "📉 하락장 우량주 폭락 & AI 매수 타점",
     "🛡️ 한국 시장 이기기", 
     "🕵️ 스마트 머니 & 수급 레이더",
     "📈 선행 펀더멘털 & 원자재",
@@ -753,7 +817,91 @@ if current_tab == "📊 AI 가치분석 & 차트":
         st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 2] 🛡️ 한국 시장 이기기 (100% 실시간 퀀트 스크리닝 연동)
+# [탭 2] 📉 하락장 우량주 폭락 포착 & AI 매수 타점 (신규 기능)
+# ---------------------------------------------------------
+elif current_tab == "📉 하락장 우량주 폭락 & AI 매수 타점":
+    st.markdown(f"## 📉 [{selected_stock_name}] 하락장 알짜 우량주 폭락 감지기 & AI 매수 타이밍")
+    st.caption("재무(ROE, BPS, 헬스 스코어)가 뛰어난 우량주가 하락장 공포 매도로 과매도 상태에 진입했을 때 3단계 분할 매수 가격대를 실시간 연산합니다.")
+
+    curr_p, price_rate, vol = get_naver_realtime_stock(stock_symbol)
+    eq, roe, op_income = fetch_dart_financials(corp_code)
+    avg_fv, min_fv, max_fv, upside, models_dict = calculate_investing_pro_fair_value(eq, roe, shares, curr_p, op_income)
+    health = calculate_financial_health_score(roe, price_rate, stock_symbol)
+    
+    df_chart = fetch_stock_history_df(stock_symbol, "day", count=90)
+    latest_rsi = round(df_chart['RSI'].iloc[-1], 1) if not df_chart.empty and 'RSI' in df_chart.columns else 45.0
+
+    dip_res = calculate_dip_buy_timing(curr_p, models_dict["S-RIM 잔여이익"], roe, health['total'], latest_rsi, price_rate)
+
+    st.markdown(f"""
+    <div class="{dip_res['card_style']}">
+        <h2 style="margin:0 0 6px 0; color: #ffffff;">현재 시그널: <b>{dip_res['signal']}</b></h2>
+        <p style="margin:0; font-size: 1.05rem; color: #c9d1d9;">💡 <b>AI 진단 소견</b>: {dip_res['reason']}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    d1, d2, d3, d4 = st.columns(4)
+    with d1: st.metric("S-RIM 적정 주가", f"{dip_res['srim_price']:,} 원", f"현재가 대비 {dip_res['discount']:+.1f}% 괴리율")
+    with d2: st.metric("1차 매수 타점 (-20%)", f"{dip_res['target_1']:,} 원", "추천 비중 30%")
+    with d3: st.metric("2차 매수 타점 (-35%)", f"{dip_res['target_2']:,} 원", "추천 비중 40%")
+    with d4: st.metric("3차 매수 타점 (바닥)", f"{dip_res['target_3']:,} 원", "추천 비중 30%")
+
+    st.divider()
+    st.markdown("### 🔍 [실시간 스크리너] 하락장 과매도 알짜배기 우량주 매수 타점 순위표")
+    st.caption("대표 상장 종목 중 재무 스코어가 우수하면서 RSI 및 S-RIM 기준 과매도 저평가 구간에 진입한 종목 리스트")
+
+    all_dip_list = []
+    for s_name, s_info in POPULAR_STOCKS.items():
+        p, r, v = get_naver_realtime_stock(s_info["symbol"])
+        e, roe_val, op_val = fetch_dart_financials(s_info["code"])
+        avg_v, _, _, _, m_dict = calculate_investing_pro_fair_value(e, roe_val, s_info["shares"], p, op_val)
+        h_score = calculate_financial_health_score(roe_val, r, s_info["symbol"])
+        
+        # 일간 차트 기반 RSI
+        df_temp = fetch_stock_history_df(s_info["symbol"], "day", count=30)
+        rsi_val = round(df_temp['RSI'].iloc[-1], 1) if not df_temp.empty and 'RSI' in df_temp.columns else 50.0
+        
+        dip_info = calculate_dip_buy_timing(p, m_dict["S-RIM 잔여이익"], roe_val, h_score['total'], rsi_val, r)
+        
+        all_dip_list.append({
+            "종목명": s_name,
+            "symbol": s_info["symbol"],
+            "현재가": p,
+            "S-RIM 적정가": dip_info["srim_price"],
+            "괴리율 (%)": dip_info["discount"],
+            "RSI": rsi_val,
+            "재무 총점": h_score['total'],
+            "1차 매수 타점": f"{dip_info['target_1']:,}원",
+            "2차 매수 타점": f"{dip_info['target_2']:,}원",
+            "AI 매수 시그널": dip_info["signal"]
+        })
+
+    df_dip_all = pd.DataFrame(all_dip_list)
+    df_dip_sorted = df_dip_all.sort_values(by="괴리율 (%)", ascending=False).reset_index(drop=True)
+    
+    st.dataframe(df_dip_sorted[["종목명", "현재가", "S-RIM 적정가", "괴리율 (%)", "RSI", "재무 총점", "1차 매수 타점", "2차 매수 타점", "AI 매수 시그널"]], use_container_width=True, hide_index=True)
+
+    st.markdown("---")
+    st.markdown("#### 💡 상위 과매도 우량주 빠른 선택 및 이동")
+    top_cols = st.columns(min(4, len(df_dip_sorted)))
+    for idx, col in enumerate(top_cols):
+        row_stock = df_dip_sorted.iloc[idx]
+        with col:
+            st.markdown(f"""
+            <div class="metric-card">
+                <b>{row_stock['종목명']}</b> ({row_stock['symbol']})<br>
+                <span style="color:#58a6ff;">현재가: {row_stock['현재가']:,}원</span><br>
+                <span style="color:#3fb950;">적정가: {row_stock['S-RIM 적정가']:,}원 ({row_stock['괴리율 (%)']:+.1f}%)</span><br>
+                <span style="color:#f85149;">시그널: {row_stock['AI 매수 시그널'].split(' ')[0]}</span>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("📊 가치분석 분석", key=f"btn_dip_jump_{row_stock['symbol']}"):
+                st.session_state.selected_symbol = row_stock['symbol']
+                st.session_state.main_tab = "📊 AI 가치분석 & 차트"
+                st.rerun()
+
+# ---------------------------------------------------------
+# [탭 3] 🛡️ 한국 시장 이기기 (100% 실시간 퀀트 스크리닝 연동)
 # ---------------------------------------------------------
 elif current_tab == "🛡️ 한국 시장 이기기":
     st.markdown("## 🛡️ 한국 시장 이기기 (Market Defender - 100% Live Engine)")
@@ -863,7 +1011,7 @@ elif current_tab == "🛡️ 한국 시장 이기기":
     st.plotly_chart(fig_w, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 3] 🕵️ 스마트 머니 및 수급 레이더
+# [탭 4] 🕵️ 스마트 머니 및 수급 레이더
 # ---------------------------------------------------------
 elif current_tab == "🕵️ 스마트 머니 & 수급 레이더":
     st.markdown(f"## 🕵️ [{selected_stock_name}] 스마트 머니 & 실제 수급 분석")
@@ -897,7 +1045,7 @@ elif current_tab == "🕵️ 스마트 머니 & 수급 레이더":
     st.dataframe(df_real_trend, use_container_width=True, hide_index=True)
 
 # ---------------------------------------------------------
-# [탭 4] 📈 펀더멘털 & 선행 원자재 지표
+# [탭 5] 📈 펀더멘털 & 선행 원자재 지표
 # ---------------------------------------------------------
 elif current_tab == "📈 선행 펀더멘털 & 원자재":
     st.markdown(f"## 📈 [{selected_stock_name}] 선행 지표 & 실제 환율 연동")
@@ -920,7 +1068,7 @@ elif current_tab == "📈 선행 펀더멘털 & 원자재":
     st.dataframe(mat_df, use_container_width=True, hide_index=True)
 
 # ---------------------------------------------------------
-# [탭 5] 🛰️ 대체 데이터 & NLP 센서
+# [탭 6] 🛰️ 대체 데이터 & NLP 센서
 # ---------------------------------------------------------
 elif current_tab == "🛰️ 대체 데이터 & NLP 센서":
     st.markdown(f"## 🛰️ [{selected_stock_name}] Google News 실시간 NLP 스캐너")
@@ -941,7 +1089,7 @@ elif current_tab == "🛰️ 대체 데이터 & NLP 센서":
             st.markdown(f"• [{item['title']}]({item['url']})")
 
 # ---------------------------------------------------------
-# [탭 6] 🔄 섹터 로테이션 및 백테스팅 스코어링
+# [탭 7] 🔄 섹터 로테이션 및 백테스팅 스코어링
 # ---------------------------------------------------------
 elif current_tab == "🔄 섹터 로테이션 & 스코어링":
     st.markdown("## 🔄 섹터 자금 이동 맵 (Sector Rotation) & 백테스팅 스코어")
@@ -971,7 +1119,7 @@ elif current_tab == "🔄 섹터 로테이션 & 스코어링":
         """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# [탭 7] 실제 외국인 & 기관 실시간 수급 트래커
+# [탭 8] 실제 외국인 & 기관 실시간 수급 트래커
 # ---------------------------------------------------------
 elif current_tab == "🏦 외국인 & 기관 수급":
     st.markdown(f"## 🏦 [{selected_stock_name}] 실제 외국인 / 기관 수급 트래커")
@@ -992,7 +1140,7 @@ elif current_tab == "🏦 외국인 & 기관 수급":
         st.plotly_chart(fig_trend, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 8] AI 실시간 뉴스 감성분석
+# [탭 9] AI 실시간 뉴스 감성분석
 # ---------------------------------------------------------
 elif current_tab == "🤖 AI 뉴스 감성분석":
     st.markdown(f"## 🤖 [{selected_stock_name}] 실시간 뉴스 수집 & 감성 리포트")
@@ -1012,7 +1160,7 @@ elif current_tab == "🤖 AI 뉴스 감성분석":
             st.markdown(f"**{idx}.** [{item['title']}]({item['url']})")
 
 # ---------------------------------------------------------
-# [탭 9] AI 퀀트 유망 스캐너 60선
+# [탭 10] AI 퀀트 유망 스캐너 60선
 # ---------------------------------------------------------
 elif current_tab == "🎯 AI 퀀트 유망 스캐너 60선":
     st.markdown("## 🎯 AI 퀀트 유망 스캐너 60선 (KOSPI & KOSDAQ 30선씩)")
@@ -1055,7 +1203,7 @@ elif current_tab == "🎯 AI 퀀트 유망 스캐너 60선":
     with cat3: render_quant_list(QUANT_SCANNER_DB[m_key]["margin_growth"], f"mg_{m_key}")
 
 # ---------------------------------------------------------
-# [탭 10] 포트폴리오 백테스팅
+# [탭 11] 포트폴리오 백테스팅
 # ---------------------------------------------------------
 elif current_tab == "💼 포트폴리오 백테스팅":
     st.markdown("## 💼 내 포트폴리오 백테스팅 & 리스크 계산기")
@@ -1084,7 +1232,7 @@ elif current_tab == "💼 포트폴리오 백테스팅":
         st.plotly_chart(fig_bt, use_container_width=True)
 
 # ---------------------------------------------------------
-# [탭 11] 동종업계 비교
+# [탭 12] 동종업계 비교
 # ---------------------------------------------------------
 elif current_tab == "⚔️ 동종업계 비교":
     st.markdown(f"## ⚔️ [{stock_sector}] 섹터 동종업계 벤치마킹 비교")
@@ -1103,7 +1251,7 @@ elif current_tab == "⚔️ 동종업계 비교":
     st.dataframe(pd.DataFrame(peer_data), use_container_width=True, hide_index=True)
 
 # ---------------------------------------------------------
-# [탭 12] 🔥 AI ProPicks (PRO 유료 전용 기능 - 관리자 해제)
+# [탭 13] 🔥 AI ProPicks (PRO 유료 전용 기능 - 관리자 해제)
 # ---------------------------------------------------------
 elif current_tab == "🔥 AI ProPicks (PRO)":
     st.markdown("## 🔥 AI ProPicks 퀀트 추천 포트폴리오 (PRO 유료 전용)")
@@ -1132,7 +1280,7 @@ elif current_tab == "🔥 AI ProPicks (PRO)":
         st.info("💡 사이드바에서 **마스터 관리자 계정(`Conlin08`)**으로 로그인하시면 유료 PRO 포트폴리오를 무료로 즉시 확인하실 수 있습니다.")
 
 # ---------------------------------------------------------
-# [탭 13] 스마트 퀀트 스크리너
+# [탭 14] 스마트 퀀트 스크리너
 # ---------------------------------------------------------
 elif current_tab == "⚙️ 스마트 퀀트 스크리너":
     st.markdown("## ⚙️ 재무 건전성 & 퀀트 멀티 조건 딥 스크리너")
@@ -1176,7 +1324,7 @@ elif current_tab == "⚙️ 스마트 퀀트 스크리너":
         st.warning("⚠️ 조건에 만족하는 종목이 없습니다. 슬라이더 점수 기준을 조절해 보세요.")
 
 # ---------------------------------------------------------
-# [탭 14] 배당 & 실적 트렌드
+# [탭 15] 배당 & 실적 트렌드
 # ---------------------------------------------------------
 elif current_tab == "💰 배당 & 실적 트렌드":
     st.markdown(f"## 💰 [{selected_stock_name}] 분기 실적 & 배당 트렌드")
@@ -1192,7 +1340,7 @@ elif current_tab == "💰 배당 & 실적 트렌드":
         st.metric("배당성향 (Payout Ratio)", "26.0%")
 
 # ---------------------------------------------------------
-# [탭 15] 🔔 핀포인트 조건 알림 (PRO 유료 전용 기능 - 관리자 해제)
+# [탭 16] 🔔 핀포인트 조건 알림 (PRO 유료 전용 기능 - 관리자 해제)
 # ---------------------------------------------------------
 else:
     st.markdown("## 🔔 핀포인트 조건 알림 시스템 (PRO 유료 전용)")
